@@ -29,10 +29,11 @@ module.exports = NodeHelper.create({
   },
 
   getPickupMethodJSON: function (_method, _uprn) {
-    var __requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
+    //var __requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
     return {
         jsonrpc: "2.0",
-        id: __requestId,
+        id: "1",
+//        id: __requestId,
         method: _method,
         params: {
           uprn: _uprn,
@@ -50,18 +51,19 @@ module.exports = NodeHelper.create({
         
         self.schedule = [];
         var i = 0;
+        Log.info("MM-WestBerksBinDays - socketNotificationReceived URL:       " + URL);
+        Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN:      " + payload.uprn);
+        Log.info("MM-WestBerksBinDays - socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
+
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
 
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived URL:       " + URL);
           Log.info("MM-WestBerksBinDays - socketNotificationReceived Fetching:  " + __key + " using " + __value);
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN:      " + payload.uprn);
-
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
           Log.info("MM-WestBerksBinDays - socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios
-            .post(this.URL, __pickupjson, {headers: HEADERS, timeout: 8000})
+            .post(this.URL, JSON.stringify(__pickupjson), {headers: JSON.stringify(HEADERS), timeout: 8000})
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - socketNotificationReceived Response: ");
