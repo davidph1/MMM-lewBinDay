@@ -16,7 +16,7 @@ const HEADERS = {
 }
 
 // Define the JSON payloads
-json_payload_methods = {
+const json_payload_methods = {
   nextRubbishDateText:  "goss.echo.westberks.forms.getNextRubbishCollectionDate",
   nextRecyclingDateText:"goss.echo.westberks.forms.getNextRecyclingCollectionDate",
   nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate",
@@ -31,14 +31,14 @@ module.exports = NodeHelper.create({
   getPickupMethodJSON: function (_method, _uprn) {
     var __requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
     return {
-       jsonrpc: "2.0",
-       id: __requestId,
-       method: _method,
-       params: {
-         uprn: _uprn,
-       }
-     }
-   },
+        jsonrpc: "2.0",
+        id: __requestId,
+        method: _method,
+        params: {
+          uprn: _uprn,
+        }
+      }
+  },
 
   socketNotificationReceived: function (notification, payload) {
     var self = this;
@@ -53,13 +53,16 @@ module.exports = NodeHelper.create({
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
 
-          Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Fetching): " + __key + ": " + __value);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived Fetching " + __key + " from " + __value);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived URL " + URL);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN " + payload.uprn);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN " + payload.uprn);
 
           axios
-            .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: this.HEADERS, timeout: 8000})
+            .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS, timeout: 8000})
             .then(function (response) {              
               
-              Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): ");
+              Log.info("MM-WestBerksBinDays - socketNotificationReceived Response: ");
               Log.info(response.description);
               Log.info(response.error);
               Log.info(response.data);
@@ -69,10 +72,10 @@ module.exports = NodeHelper.create({
             .catch(function (error) {
               // TODO: alert on errors
               if (error.response) {
-                Log.error("! MM-WestBerksBinDays - Error (socketNotificationReceived): " + error.Response);
+                Log.error("! MM-WestBerksBinDays - socketNotificationReceived: " + error.Response);
               }
               else {
-                Log.error("! MM-WestBerksBinDays - Error: (socketNotificationReceived)");
+                Log.error("! MM-WestBerksBinDays - socketNotificationReceived");
               }
             });
             i++;
