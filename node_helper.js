@@ -42,12 +42,14 @@ module.exports = NodeHelper.create({
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
 
+          Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Fetching): " + __key + ": " + __value);
+
           axios
             .post(url, getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS})
             .then(function (response) {              
               
-              Log.error("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response);
-              self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result[i]});
+              Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response);
+              self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result[0]});
 
             })
             .catch(function (error) {

@@ -1,6 +1,13 @@
 # MMM-WestBerksBinDay
 Magic Mirror Module to display bin collection details from West Berkshire Council's API
 
+
+**** FORK FROM THE ORIGINAL https://github.com/hdurdle/MMM-WestBerksBinDay
+**** & WITH THANKS TO Howard Durdle - https://github.com/hdurdle
+**** Updated for points to the new West Berkshire URI; and using a Post (traced with Chrome and Pstman)
+**** Also adds the new Food Waste (mini Green bin) ;)
+
+
 ![Screenshot](screenshot.png "Screenshot")
 
 ## Installation
