@@ -49,17 +49,19 @@ module.exports = NodeHelper.create({
         // generate a random Id, required for the request post data♦
         
         self.schedule = [];
-        i=0;
+        var i = 0;
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
 
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived Fetching " + __key + " from " + __value);
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived URL " + URL);
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN " + payload.uprn);
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN " + payload.uprn);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived URL:       " + URL);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived Fetching:  " + __key + " using " + __value);
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN:      " + payload.uprn);
+
+          var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
+          Log.info("MM-WestBerksBinDays - socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios
-            .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS, timeout: 8000})
+            .post(this.URL, __pickupjson, {headers: HEADERS, timeout: 8000})
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - socketNotificationReceived Response: ");
