@@ -7,12 +7,14 @@ const Log = require("logger");
 const URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary"
 
 // Set the request headers
-const HEADERS = {
-  "Content-Type": "application/json; charset=UTF-8",
-  "User-Agent": "PostmanRuntime/7.32.2",
-  "Accept": "*/*",
-  "Accept-Encoding": "gzip, deflate, br",
-  "Connection": "keep-alive"  
+const HEADERS = { 
+  headers : {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'User-Agent': 'PostmanRuntime/7.32.2',
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive'  
+}
 }
 
 // Define the JSON payloads
@@ -63,7 +65,7 @@ module.exports = NodeHelper.create({
           Log.info("MM-WestBerksBinDays - socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios
-            .post(this.URL, JSON.stringify(__pickupjson), {headers: JSON.stringify(HEADERS), timeout: 8000})
+            .post(this.URL,  JSON.stringify(__pickupjson), HEADERS)
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - socketNotificationReceived Response: ");
