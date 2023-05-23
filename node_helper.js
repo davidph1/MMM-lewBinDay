@@ -1,7 +1,26 @@
 var NodeHelper = require("node_helper");
 var axios = require("axios");
-var moment = require("moment");
 const multisort = require("multisort");
+const Log = require("logger");
+
+// URL for the POST request
+const url = "https://www.westberks.gov.uk/apiserver/ajaxlibrary"
+
+// Set the request headers
+const HEADERS = {
+  "Content-Type": "application/json; charset=UTF-8",
+  "User-Agent": "PostmanRuntime/7.32.2",
+  "Accept": "*/*",
+  "Accept-Encoding": "gzip, deflate, br",
+  "Connection": "keep-alive"
+}
+
+// Define the JSON payloads
+json_payload_methods = {
+  nextRubbishDateText:  "goss.echo.westberks.forms.getNextRubbishCollectionDate",
+  nextRecyclingDateText:"goss.echo.westberks.forms.getNextRecyclingCollectionDate",
+  nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate",
+}
 
 module.exports = NodeHelper.create({
   start: function () {
@@ -15,28 +34,49 @@ module.exports = NodeHelper.create({
       this.config = payload;
     } else if (notification == "MMM-WESTBERKSBINDAY-GET") {
       if (this.schedule == null) {
-        // generate a random Id, required for the request post data
+        // generate a random Id, required for the request post data♦
         var requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
+        
+        self.schedule = {};
+        i=0;
+        for (var __key in json_payload_methods){
+          var __value = json_payload_methods[__key];
 
-        axios
-          .post("https://citizen.westberks.gov.uk/apiserver/ajaxlibrary", {
-            jsonrpc: "2.0",
-            id: requestId,
-            method: "veolia.wasteservices.v1.getServicesByUPRN",
-            params: {
-              uprn: payload.uprn,
-            },
-          })
-          .then(function (response) {
-            // TODO: handle bad responses
-            self.schedule = response.data.result.services;
-            self.getNextPickups(payload);
-          })
-          .catch(function (error) {
-            // TODO: alert on errors
-          });
+          axios
+            .post(url, getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS})
+            .then(function (response) {              
+              
+              Log.error("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response);
+              self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result[i]});
+
+            })
+            .catch(function (error) {
+              // TODO: alert on errors
+              if (error.response) {
+                Log.error("! MM-WestBerksBinDays - Error (socketNotificationReceived): " + error.Response);
+              }
+              else {
+                Log.error("! MM-WestBerksBinDays - Error: (socketNotificationReceived)");
+              }
+            });
+            i++;
+        }
+
+        self.getNextPickups(payload);
+
       } else {
         this.getNextPickups(payload);
+      }
+    }
+  },
+
+  getPickupMethodJSON: function (_method, _uprn) {
+   return {
+      jsonrpc: "2.0",
+      id: requestId,
+      method: _method,
+      params: {
+        uprn: _uprn,
       }
     }
   },
@@ -47,25 +87,30 @@ module.exports = NodeHelper.create({
     this.schedule.forEach((element) => {
       if (element.ServiceName == payload.refuseServiceName) {
         var refusePickup = {
-          pickupDate: moment(element.ServiceHeaders.ServiceHeader.Next),
+          pickupDate: element.nextDateText,
           pickupType: "RefuseBin",
         };
         nextPickups.push(refusePickup);
       }
       if (element.ServiceName == payload.recyclingServiceName) {
         var greenPickup = {
-          pickupDate: moment(element.ServiceHeaders.ServiceHeader.Next),
+          pickupDate: element.nextDateText,
           pickupType: "GreenBin",
         };
         nextPickups.push(greenPickup);
+      }
+      if (element.ServiceName == payload.foodWasteServiceName) {
+        var foodwastePickup = {
+          pickupDate: element.nextDateText,
+          pickupType: "FoodBin",
+        };
+        nextPickups.push(foodwastePickup);
       }
     });
 
     multisort(nextPickups, ["pickupDate"]);
 
     this.sendSocketNotification(
-      "MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId,
-      nextPickups
-    );
+      "MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId, nextPickups);
   },
 });

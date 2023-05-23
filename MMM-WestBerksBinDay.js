@@ -4,8 +4,9 @@ Module.register('MMM-WestBerksBinDay', {
   defaults: {
     uprn: "",
     dateFormat: "dddd D MMMM",
-    refuseServiceName: "Domestic Refuse Collection",
-    recyclingServiceName: "Domestic Dry Recycling Collection"
+    refuseServiceName: "nextRubbishDateText",
+    recyclingServiceName: "nextRecyclingDateText",
+    foodWasteServiceName: "nextFoodWasteDateText"
   },
 
   // Define stylesheet
@@ -15,7 +16,7 @@ Module.register('MMM-WestBerksBinDay', {
 
   // Define required scripts.
   getScripts: function () {
-    return ["moment.js"];
+    return []; //["moment.js"];
   },
 
   capFirst: function (string) {
@@ -38,7 +39,8 @@ Module.register('MMM-WestBerksBinDay', {
       instanceId: this.identifier,
       uprn: this.config.uprn,
       refuseServiceName: this.config.refuseServiceName,
-      recyclingServiceName: this.config.recyclingServiceName
+      recyclingServiceName: this.config.recyclingServiceName,
+      foodWasteServiceName: this.config.foodWasteServiceName
     });
 
     // Set check times
@@ -68,7 +70,10 @@ Module.register('MMM-WestBerksBinDay', {
         svg.setAttributeNS(null, "style", "fill: #787878");
         break;
       case 'PaperBin':
-        svg.setAttributeNS(null, "style", "fill: #0059ff");
+          svg.setAttributeNS(null, "style", "fill: #0059ff");
+        break;      
+      case 'FoodBin':
+          svg.setAttributeNS(null, "style", "fill: #38761d");
         break;
       default:
         svg.setAttributeNS(null, "style", "fill: " + color);
