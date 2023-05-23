@@ -4,7 +4,7 @@ const multisort = require("multisort");
 const Log = require("logger");
 
 // URL for the POST request
-const URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary"
+const URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary";
 
 // Set the request headers
 const HEADERS = {
@@ -14,14 +14,14 @@ const HEADERS = {
     'Accept-Encoding': 'gzip, deflate, br',
     'Connection': 'keep-alive'  
 
-}
+};
 
 // Define the JSON payloads
 const json_payload_methods = {
   nextRubbishDateText:  "goss.echo.westberks.forms.getNextRubbishCollectionDate",
   nextRecyclingDateText:"goss.echo.westberks.forms.getNextRecyclingCollectionDate",
   nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate",
-}
+};
 
 module.exports = NodeHelper.create({
   start: function () {
@@ -65,13 +65,14 @@ module.exports = NodeHelper.create({
 
           const response = axios.post(this.URL, __pickupjson, {headers : this.HEADERS})
           try{
-            if (response) {              
+            if (response) {             
                 
                 Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-                Log.info(response.description);
-                Log.info(response.error);
-                Log.info(response.data);
-                self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result});
+                if (response.description) {Log.info(response.description);}
+                if (response.error) {Log.info(response.error);}
+                Log.info(JSON.stringify(response.data));
+                var __ret = JSON.parse(response.data);
+                self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
 
               }
           }
