@@ -29,9 +29,10 @@ module.exports = NodeHelper.create({
   },
 
   getPickupMethodJSON: function (_method, _uprn) {
+    var __requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
     return {
        jsonrpc: "2.0",
-       id: requestId,
+       id: __requestId,
        method: _method,
        params: {
          uprn: _uprn,
@@ -46,7 +47,6 @@ module.exports = NodeHelper.create({
     } else if (notification == "MMM-WESTBERKSBINDAY-GET") {
       if (this.schedule == null) {
         // generate a random Id, required for the request post data♦
-        var requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
         
         self.schedule = [];
         i=0;
