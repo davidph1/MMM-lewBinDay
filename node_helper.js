@@ -48,7 +48,7 @@ module.exports = NodeHelper.create({
         // generate a random Id, required for the request post data♦
         var requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
         
-        self.schedule = {};
+        self.schedule = [];
         i=0;
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
@@ -82,32 +82,35 @@ module.exports = NodeHelper.create({
       }
     }
   },
+
   getNextPickups: function (payload) {
     var nextPickups = [];
 
-    this.schedule.forEach((element) => {
-      if (element.ServiceName == payload.refuseServiceName) {
+    for (let i = 0; i < this.schedule.length; i++) {
+      element=this.schedule[i];
+
+      if (element.ServiceName == this.config.refuseServiceName) {
         var refusePickup = {
           pickupDate: element.nextDateText,
           pickupType: "RefuseBin",
         };
         nextPickups.push(refusePickup);
       }
-      if (element.ServiceName == payload.recyclingServiceName) {
+      else if (element.ServiceName == this.config.recyclingServiceName) {
         var greenPickup = {
           pickupDate: element.nextDateText,
           pickupType: "GreenBin",
         };
         nextPickups.push(greenPickup);
       }
-      if (element.ServiceName == payload.foodWasteServiceName) {
+      else if (element.ServiceName == this.config.foodWasteServiceName) {
         var foodwastePickup = {
           pickupDate: element.nextDateText,
           pickupType: "FoodBin",
         };
         nextPickups.push(foodwastePickup);
       }
-    });
+    }
 
     multisort(nextPickups, ["pickupDate"]);
 
