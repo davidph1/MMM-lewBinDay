@@ -4,20 +4,19 @@ const multisort = require("multisort");
 const Log = require("logger");
 
 // URL for the POST request
-const URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary";
+URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary";
 
 // Set the request headers
-const HEADERS = {
+HEADERS = {
     'Content-Type': 'application/json; charset=UTF-8',
     'User-Agent': 'PostmanRuntime/7.32.2',
     'Accept': '*/*',
     'Accept-Encoding': 'gzip, deflate, br',
     'Connection': 'keep-alive'  
-
 };
 
 // Define the JSON payloads
-const json_payload_methods = {
+json_payload_methods = {
   nextRubbishDateText:  "goss.echo.westberks.forms.getNextRubbishCollectionDate",
   nextRecyclingDateText:"goss.echo.westberks.forms.getNextRecyclingCollectionDate",
   nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate",
