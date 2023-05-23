@@ -7,14 +7,13 @@ const Log = require("logger");
 const URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary"
 
 // Set the request headers
-const HEADERS = { 
-  headers : {
+const HEADERS = {
     'Content-Type': 'application/json; charset=UTF-8',
     'User-Agent': 'PostmanRuntime/7.32.2',
     'Accept': '*/*',
     'Accept-Encoding': 'gzip, deflate, br',
     'Connection': 'keep-alive'  
-}
+
 }
 
 // Define the JSON payloads
@@ -53,38 +52,34 @@ module.exports = NodeHelper.create({
         
         self.schedule = [];
         var i = 0;
-        Log.info("MM-WestBerksBinDays - socketNotificationReceived URL:       " + URL);
-        Log.info("MM-WestBerksBinDays - socketNotificationReceived UPRN:      " + payload.uprn);
-        Log.info("MM-WestBerksBinDays - socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
+        Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
+        Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
+        Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
 
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
 
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived Fetching:  " + __key + " using " + __value);
+          Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
-          Log.info("MM-WestBerksBinDays - socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
+          Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
-          axios
-            .post(this.URL,  JSON.stringify(__pickupjson), HEADERS)
-            .then(function (response) {              
-              
-              Log.info("MM-WestBerksBinDays - socketNotificationReceived Response: ");
-              Log.info(response.description);
-              Log.info(response.error);
-              Log.info(response.data);
-              self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result});
+          const response = axios.post(this.URL, __pickupjson, {headers : this.HEADERS})
+          try{
+            if (response) {              
+                
+                Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
+                Log.info(response.description);
+                Log.info(response.error);
+                Log.info(response.data);
+                self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result});
 
-            })
-            .catch(function (error) {
-              // TODO: alert on errors
-              if (error.response) {
-                Log.error("! MM-WestBerksBinDays - socketNotificationReceived: " + error.Response);
               }
-              else {
-                Log.error("! MM-WestBerksBinDays - socketNotificationReceived");
-              }
-            });
-            i++;
+          }
+          catch(err) 
+          {
+              Log.error("MMM-WestBerksBinDays: socketNotificationReceived: "+err.name+" - "+err.message);
+          };
+          i++;
         }
 
         self.getNextPickups(payload);
