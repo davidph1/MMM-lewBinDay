@@ -28,6 +28,17 @@ module.exports = NodeHelper.create({
     this.schedule = null;
   },
 
+  getPickupMethodJSON: function (_method, _uprn) {
+    return {
+       jsonrpc: "2.0",
+       id: requestId,
+       method: _method,
+       params: {
+         uprn: _uprn,
+       }
+     }
+   },
+
   socketNotificationReceived: function (notification, payload) {
     var self = this;
     if (notification == "MMM-WESTBERKSBINDAY-CONFIG") {
@@ -45,7 +56,7 @@ module.exports = NodeHelper.create({
           Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Fetching): " + __key + ": " + __value);
 
           axios
-            .post(url, getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS})
+            .post(url, self.getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS})
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response);
@@ -71,18 +82,6 @@ module.exports = NodeHelper.create({
       }
     }
   },
-
-  getPickupMethodJSON: function (_method, _uprn) {
-   return {
-      jsonrpc: "2.0",
-      id: requestId,
-      method: _method,
-      params: {
-        uprn: _uprn,
-      }
-    }
-  },
-
   getNextPickups: function (payload) {
     var nextPickups = [];
 
