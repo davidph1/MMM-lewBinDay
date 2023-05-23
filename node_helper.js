@@ -12,7 +12,7 @@ const HEADERS = {
   "User-Agent": "PostmanRuntime/7.32.2",
   "Accept": "*/*",
   "Accept-Encoding": "gzip, deflate, br",
-  "Connection": "keep-alive"
+  "Connection": "keep-alive"  
 }
 
 // Define the JSON payloads
@@ -56,10 +56,12 @@ module.exports = NodeHelper.create({
           Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Fetching): " + __key + ": " + __value);
 
           axios
-            .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: this.HEADERS})
+            .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: this.HEADERS, timeout: 8000})
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): ");
+              Log.info(response.description);
+              Log.info(response.error);
               Log.info(response.data);
               self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result});
 
