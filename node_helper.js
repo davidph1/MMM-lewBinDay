@@ -60,7 +60,7 @@ module.exports = NodeHelper.create({
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response.data);
-              self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result[0]});
+              self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result});
 
             })
             .catch(function (error) {
