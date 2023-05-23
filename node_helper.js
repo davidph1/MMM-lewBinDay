@@ -4,7 +4,7 @@ const multisort = require("multisort");
 const Log = require("logger");
 
 // URL for the POST request
-const url = "https://www.westberks.gov.uk/apiserver/ajaxlibrary"
+const URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary"
 
 // Set the request headers
 const HEADERS = {
@@ -56,7 +56,7 @@ module.exports = NodeHelper.create({
           Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Fetching): " + __key + ": " + __value);
 
           axios
-            .post(url, self.getPickupMethodJSON(__value, payload.uprn), {headers: HEADERS})
+            .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: this.HEADERS})
             .then(function (response) {              
               
               Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response.data);
