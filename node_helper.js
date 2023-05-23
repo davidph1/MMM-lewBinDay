@@ -59,7 +59,8 @@ module.exports = NodeHelper.create({
             .post(this.URL, self.getPickupMethodJSON(__value, payload.uprn), {headers: this.HEADERS})
             .then(function (response) {              
               
-              Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): " + response.data);
+              Log.info("MM-WestBerksBinDays - Info (socketNotificationReceived Response): ");
+              Log.info(response.data);
               self.schedule.push({ServiceName: __key, nextDateText: response.data.result.json_method_result});
 
             })
