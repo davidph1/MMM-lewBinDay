@@ -70,20 +70,21 @@ module.exports = NodeHelper.create({
             if (response.data) {
               Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
               Log.info(JSON.stringify(response.data));
-              
-              var __ret = response.data;
-              
-              for(var reskey in __ret.result)
+        
+              for(var reskey in response.data.result)
               {
+                
                 Log.info(`result key: ${reskey}`);
-                if (reskey == this.config.refuseServiceName ||
-                    reskey ==  this.config.recyclingServiceName ||
-                    reskey ==  this.config.foodWasteServiceName) 
+                if (reskey == payload.refuseServiceName ||
+                    reskey ==  payload.recyclingServiceName ||
+                    reskey ==  payload.foodWasteServiceName) 
                 {
-                  self.schedule.push({ ServiceName: reskey, nextDateText: __ret.result[reskey] });
+                  self.schedule.push({ServiceName: reskey,nextDateText: __ret.result[reskey]})
                 }
                 Log.info(`result value: ${__ret.result[reskey]}`);
               }
+
+              self.getNextPickups(payload);
             }
 
             if (response.description) { Log.info(response.description); }
@@ -95,7 +96,6 @@ module.exports = NodeHelper.create({
           i++;
         }
 
-        self.getNextPickups(payload);
 
       } else {
         this.getNextPickups(payload);
