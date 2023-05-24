@@ -67,16 +67,23 @@ module.exports = NodeHelper.create({
                 
                 Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
                 if (response.description) {Log.info(response.description);}
-                if (response.error) {Log.info(response.error);}
-                if (response.data) {
-                  Log.info(JSON.stringify(response.data));
-                  var __ret = JSON.parse(response.data);
-                  self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
+                try{                
+                  if (response.data) {
+                    Log.info(JSON.stringify(response.data));
+                    var __ret = JSON.parse(response.data);
+                    self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
+                  }
                 }
+                catch(err)
+                {
+                  Log.error(err);
+                }
+                if (response.error) {Log.error(response.error);}
               }
           ).catch((error)=> {
               Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
           });
+
           i++;
         }
 
