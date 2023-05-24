@@ -8,18 +8,18 @@ var URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary";
 
 // Set the request headers
 var HEADERS = {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'User-Agent': 'PostmanRuntime/7.32.2',
-    'Accept': '*/*',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive'  
+  'Content-Type': 'application/json; charset=UTF-8',
+  'User-Agent': 'PostmanRuntime/7.32.2',
+  'Accept': '*/*',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Connection': 'keep-alive'
 };
 
 // Define the JSON payloads
 var json_payload_methods = {
-  nextRubbishDateText:  "goss.echo.westberks.forms.getNextRubbishCollectionDate",
-  nextRecyclingDateText:"goss.echo.westberks.forms.getNextRecyclingCollectionDate",
-  nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate"
+  nextRubbishDateText: "goss.echo.westberks.forms.getNextRubbishCollectionDate",
+  nextRecyclingDateText: "goss.echo.westberks.forms.getNextRecyclingCollectionDate",
+  nextFoodWasteDateText: "goss.echo.westberks.forms.getNextFoodWasteCollectionDate"
 };
 
 module.exports = NodeHelper.create({
@@ -31,14 +31,14 @@ module.exports = NodeHelper.create({
   getPickupMethodJSON: function (_method, _uprn) {
     //var __requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
     return {
-        jsonrpc: "2.0",
-        id: "1",
-//        id: __requestId,
-        method: _method,
-        params: {
-          uprn: _uprn,
-        }
+      jsonrpc: "2.0",
+      id: "1",
+      //        id: __requestId,
+      method: _method,
+      params: {
+        uprn: _uprn,
       }
+    }
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -48,14 +48,14 @@ module.exports = NodeHelper.create({
     } else if (notification == "MMM-WESTBERKSBINDAY-GET") {
       if (this.schedule == null) {
         // generate a random Id, required for the request post data♦
-        
+
         schedule = [];
         var i = 0;
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
 
-        for (var __key in json_payload_methods){
+        for (var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
           var __keyName = __key;
 
@@ -63,28 +63,23 @@ module.exports = NodeHelper.create({
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
-          axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, {headers : HEADERS})
-          .then((response) => {          
-            if (response.description) {Log.info(response.description);}
-            try{                
-              if (response.data) {
-                Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-                Log.info(JSON.stringify(response.data));
-                var __ret = response.data;
+          var response = axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
+          try {
+            if (response.data) {
+              Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
+              Log.info(JSON.stringify(response.data));
+              var __ret = response.data;
 
-                Log.info("__key="+__keyName);
-                schedule.push({ServiceName: __keyName, nextDateText: __ret.result[__keyName]});
-              }
+              Log.info("__key=" + __keyName);
+              schedule.push({ ServiceName: __keyName, nextDateText: __ret.result[__keyName] });
             }
-            catch(err)
-            {
-              Log.error(err);
-            }
-            if (response.error) {Log.error(response.error);}
+
+            if (response.description) { Log.info(response.description); }
+            if (response.error) { Log.error(response.error); }
           }
-          ).catch((error)=> {
-              Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
-          });
+          catch (error) {
+            Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
+          };
 
           i++;
         }
@@ -102,7 +97,7 @@ module.exports = NodeHelper.create({
 
     Log.info("MMM-WestBerksBinDays: getNextPickups Schedule Length=" + this.schedule.length);
     for (let i = 0; i < schedule.length; i++) {
-      element=schedule[i];
+      element = schedule[i];
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.ServiceName = ${element.ServiceName}`);
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.nextDateText = ${element.nextDateText}`);
 
