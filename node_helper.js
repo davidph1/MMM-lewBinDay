@@ -64,22 +64,23 @@ module.exports = NodeHelper.create({
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, {headers : HEADERS})
           .then((response) => {          
-                
+            if (response.description) {Log.info(response.description);}
+            try{                
+              if (response.data) {
                 Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-                if (response.description) {Log.info(response.description);}
-                try{                
-                  if (response.data) {
-                    Log.info(JSON.stringify(response.data));
-                    var __ret = response.data;
-                    self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
-                  }
-                }
-                catch(err)
-                {
-                  Log.error(err);
-                }
-                if (response.error) {Log.error(response.error);}
+                Log.info(JSON.stringify(response.data));
+                var __ret = response.data;
+
+                Log.info("__key="+__key);
+                self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
               }
+            }
+            catch(err)
+            {
+              Log.error(err);
+            }
+            if (response.error) {Log.error(response.error);}
+          }
           ).catch((error)=> {
               Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
           });
@@ -101,8 +102,8 @@ module.exports = NodeHelper.create({
     Log.info("MMM-WestBerksBinDays: getNextPickups Schedule Length=" + this.schedule.length);
     for (let i = 0; i < this.schedule.length; i++) {
       element=this.schedule[i];
-      Log.info("MMM-WestBerksBinDays: getNextPickups element.ServiceName = " + element.ServiceName);
-      Log.info("MMM-WestBerksBinDays: getNextPickups element.nextDateText = " + element.nextDateText);
+      Log.info(`MMM-WestBerksBinDays: getNextPickups element.ServiceName = ${element.ServiceName}`);
+      Log.info(`MMM-WestBerksBinDays: getNextPickups element.nextDateText = ${element.nextDateText}`);
 
       if (element.ServiceName == this.config.refuseServiceName) {
         var refusePickup = {
