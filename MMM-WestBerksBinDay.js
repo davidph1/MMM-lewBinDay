@@ -53,6 +53,8 @@ Module.register('MMM-WestBerksBinDay', {
   socketNotificationReceived: function (notification, payload) {
     if (notification == "MMM-WESTBERKSBINDAY-RESPONSE" + this.identifier && payload.length > 0) {
       this.nextPickups = payload;
+      Log.info(`MMM-WestBerksBinDays: socketNotificationReceived nextPickupLength=${this.nextPickups.length}`);
+
       this.updateDom(1000);
     }
   },

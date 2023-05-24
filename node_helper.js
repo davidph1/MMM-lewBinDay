@@ -133,8 +133,7 @@ module.exports = NodeHelper.create({
         var foodwastePickup = {
           pickupDate: moment(element.nextDateText),
           pickupType: "FoodBin",
-        };
-        
+        };        
         nextPickups.push(foodwastePickup);
       }
     }
