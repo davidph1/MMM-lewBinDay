@@ -59,7 +59,7 @@ module.exports = NodeHelper.create({
 
         for (var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
-          __keyName = __key;
+          self.__keyName = __key;
 
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
