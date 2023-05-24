@@ -19,7 +19,7 @@ var HEADERS = {
 var json_payload_methods = {
   nextRubbishDateText:  "goss.echo.westberks.forms.getNextRubbishCollectionDate",
   nextRecyclingDateText:"goss.echo.westberks.forms.getNextRecyclingCollectionDate",
-  nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate",
+  nextFoodWasteDateText:"goss.echo.westberks.forms.getNextFoodWasteCollectionDate"
 };
 
 module.exports = NodeHelper.create({
@@ -62,7 +62,8 @@ module.exports = NodeHelper.create({
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
-          const response = axios.post(this.URL, __pickupjson, {headers : this.HEADERS})
+          const response = axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, {headers : HEADERS});
+          
           try{
             if (response) {             
                 
