@@ -84,6 +84,7 @@ module.exports = NodeHelper.create({
                   self.schedule.push({ServiceName: reskey, nextDateText: response.data.result[reskey]});
                 }
               }
+              self.getNextPickups(payload);
 
             }
 
@@ -95,7 +96,6 @@ module.exports = NodeHelper.create({
 
           i++;
         }
-        self.getNextPickups(payload);
 
 
       } else {
