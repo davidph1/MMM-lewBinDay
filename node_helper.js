@@ -64,7 +64,7 @@ module.exports = NodeHelper.create({
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
-          .then(function(response) {
+          .then(function(response, __value, __keyName) {
             if (response.data) {
               Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
               Log.info(JSON.stringify(response.data));
