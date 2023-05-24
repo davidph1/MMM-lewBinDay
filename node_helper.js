@@ -113,21 +113,21 @@ module.exports = NodeHelper.create({
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.ServiceName = ${element.ServiceName}`);
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.nextDateText = ${element.nextDateText}`);
 
-      if (element.ServiceName == this.config.refuseServiceName) {
+      if (element.ServiceName == payload.refuseServiceName) {
         var refusePickup = {
           pickupDate: element.nextDateText,
           pickupType: "RefuseBin",
         };
         nextPickups.push(refusePickup);
       }
-      else if (element.ServiceName == this.config.recyclingServiceName) {
+      else if (element.ServiceName == payload.recyclingServiceName) {
         var greenPickup = {
           pickupDate: element.nextDateText,
           pickupType: "GreenBin",
         };
         nextPickups.push(greenPickup);
       }
-      else if (element.ServiceName == this.config.foodWasteServiceName) {
+      else if (element.ServiceName == payload.foodWasteServiceName) {
         var foodwastePickup = {
           pickupDate: element.nextDateText,
           pickupType: "FoodBin",
@@ -135,10 +135,10 @@ module.exports = NodeHelper.create({
         nextPickups.push(foodwastePickup);
       }
     }
-
+    Log.info("nextPickups length (pre sort): "+ nextPickups.length);
     multisort(nextPickups, ["pickupDate"]);
-
-    this.sendSocketNotification(
-      "MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId, nextPickups);
+    Log.info("nextPickups length: "+ nextPickups.length);
+    
+    this.sendSocketNotification("MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId, nextPickups);
   },
 });
