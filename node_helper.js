@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
       if (this.schedule == null) {
         // generate a random Id, required for the request post data♦
 
-        this.schedule = [];
+        self.schedule = [];
         var i = 0;
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
@@ -63,23 +63,22 @@ module.exports = NodeHelper.create({
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
-          var response = axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
-          try {
+          axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
+          .then(function(response) {
             if (response.data) {
               Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
               Log.info(JSON.stringify(response.data));
               var __ret = response.data;
 
               Log.info("__key=" + __keyName);
-              this.schedule.push({ ServiceName: __keyName, nextDateText: __ret.result[__keyName] });
+              self.schedule.push({ ServiceName: __keyName, nextDateText: __ret.result[__keyName] });
             }
 
             if (response.description) { Log.info(response.description); }
             if (response.error) { Log.error(response.error); }
-          }
-          catch (error) {
+          }).catch(function (error) {
             Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
-          };
+          });
 
           i++;
         }
