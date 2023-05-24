@@ -64,14 +64,13 @@ module.exports = NodeHelper.create({
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
-          .then(function(response, __value, __keyName) {
+          .then(function(response) {
             if (response.data) {
               Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
               Log.info(JSON.stringify(response.data));
               var __ret = response.data;
-
-              Log.info("__key=" + __keyName);
-              self.schedule.push({ ServiceName: __keyName, nextDateText: __ret.result[__keyName] });
+              
+              self.schedule.push({ ServiceName: parent.__keyName, nextDateText: __ret.result[parent.__keyName] });
             }
 
             if (response.description) { Log.info(response.description); }
