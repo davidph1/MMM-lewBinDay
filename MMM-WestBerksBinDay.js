@@ -108,14 +108,17 @@ Module.register('MMM-WestBerksBinDay', {
       var pickupContainer = document.createElement("div");
       pickupContainer.classList.add("binday-container");
 
+      var typeContainer = document.createElement("span");
+      typeContainer.classList.add("binday-type");
+      typeContainer.innerHTML = pickup.pickupType+":";
+      pickupContainer.appendChild(typeContainer);
+
       var dateContainer = document.createElement("span");
       dateContainer.classList.add("binday-date");
 
       moment.locale();
       var today = moment().startOf("day");
       var pickUpDate = moment(pickup.pickupDate);
-
-      dateContainer.innerHTML = pickup.pickupType+": ";
 
       if (today.isSame(pickUpDate)) {
         dateContainer.innerHTML += "Today";
@@ -132,8 +135,8 @@ Module.register('MMM-WestBerksBinDay', {
       var iconContainer = document.createElement("span");
       iconContainer.classList.add("binday-icon-container");
       iconContainer.appendChild(this.svgIconFactory(pickup.pickupType));
-
       pickupContainer.appendChild(iconContainer);
+
       wrapper.appendChild(pickupContainer);
 
     };
