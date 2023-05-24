@@ -46,54 +46,54 @@ module.exports = NodeHelper.create({
   },
 
   convertStringToDate: function (dateString) {
-  // Define the month names and their respective indexes
-  const monthNames = {
-    January: 0,
-    February: 1,
-    March: 2,
-    April: 3,
-    May: 4,
-    June: 5,
-    July: 6,
-    August: 7,
-    September: 8,
-    October: 9,
-    November: 10,
-    December: 11
-  };
+    // Define the month names and their respective indexes
+    const monthNames = {
+      January: 0,
+      February: 1,
+      March: 2,
+      April: 3,
+      May: 4,
+      June: 5,
+      July: 6,
+      August: 7,
+      September: 8,
+      October: 9,
+      November: 10,
+      December: 11
+    };
 
-  // Split the input string by space
-  const parts = dateString.split(' ');
+    // Split the input string by space
+    const parts = dateString.split(' ');
 
-  // Ensure the input string has three parts
-  if (parts.length !== 3) {
-    throw new Error('Invalid date string format. Expected format: "Weekday Day Month".');
-  }
+    // Ensure the input string has three parts
+    if (parts.length !== 3) {
+      throw new Error('Invalid date string format. Expected format: "Weekday Day Month".');
+    }
 
-  // Extract the day, month, and year values
-  const day = parseInt(parts[1]);
-  const month = monthNames[parts[2]];
+    // Extract the day, month, and year values
+    const day = parseInt(parts[1]);
+    const month = monthNames[parts[2]];
 
-  // Ensure day and month are valid numbers
-  if (isNaN(day) || isNaN(month)) {
-    throw new Error('Invalid day or month value.');
-  }
+    // Ensure day and month are valid numbers
+    if (isNaN(day) || isNaN(month)) {
+      throw new Error('Invalid day or month value.');
+    }
 
-  // Ensure day is within a valid range
-  if (day < 1 || day > 31) {
-    throw new Error('Invalid day value. Day must be between 1 and 31.');
-  }
+    // Ensure day is within a valid range
+    if (day < 1 || day > 31) {
+      throw new Error('Invalid day value. Day must be between 1 and 31.');
+    }
 
-  // Ensure month is within a valid range
-  if (month < 0 || month > 11) {
-    throw new Error('Invalid month value. Month must be between 0 and 11.');
-  }
+    // Ensure month is within a valid range
+    if (month < 0 || month > 11) {
+      throw new Error('Invalid month value. Month must be between 0 and 11.');
+    }
 
-  // Create a new Date object using the extracted values
-  const year = new Date().getFullYear(); // Assumes current year
-  const dateObject = new Date(year, month, day);
+    // Create a new Date object using the extracted values
+    const year = new Date().getFullYear(); // Assumes current year
+    const dateObject = new Date(year, month, day);
 
-  return dateObject;
+    return dateObject;
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -110,7 +110,7 @@ module.exports = NodeHelper.create({
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
         //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
 
-        for(var __key in json_payload_methods) {
+        for (var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
 
           //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
@@ -118,42 +118,32 @@ module.exports = NodeHelper.create({
           //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
-          .then(function(response) {
+            .then(function (response) {
 
-            if (response.data) {
-              //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-              //Log.info(JSON.stringify(response.data));
-        
-              for(var reskey in response.data.result)
-              {
+              if (response.data) {
+                //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
+                //Log.info(JSON.stringify(response.data));
 
-                if (reskey == payload.refuseServiceName ||
-                    reskey ==  payload.recyclingServiceName ||
-                    reskey ==  payload.foodWasteServiceName) 
-                {
-                  //Log.info(`result key: ${reskey}`);
-                  //Log.info(`result value: ${response.data.result[reskey]}`);
+                for (var reskey in response.data.result) {
 
-                  try {
-                    const dateString = (response.data.result[reskey]);
-                    const dateObject = this.convertStringToDate(dateString);
-                    Log.info(dateObject);
-                  } catch (error) {
-                    Log.error('Error:', error.message);
+                  if (reskey == payload.refuseServiceName ||
+                    reskey == payload.recyclingServiceName ||
+                    reskey == payload.foodWasteServiceName) {
+                    //Log.info(`result key: ${reskey}`);
+                    //Log.info(`result value: ${response.data.result[reskey]}`);
+
+                    self.schedule.push({ ServiceName: reskey, nextDateText: response.data.result[reskey] });
                   }
-
-                  self.schedule.push({ServiceName: reskey, nextDateText: dateObject});
                 }
+                self.getNextPickups(payload);
+
               }
-              self.getNextPickups(payload);
 
-            }
-
-            if (response.description) { Log.info(response.description); }
-            if (response.error) { Log.error(response.error); }
-          }).catch(function (error) {
-            Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
-          });
+              if (response.description) { Log.info(response.description); }
+              if (response.error) { Log.error(response.error); }
+            }).catch(function (error) {
+              Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
+            });
 
           i++;
         }
@@ -165,6 +155,9 @@ module.exports = NodeHelper.create({
     }
   },
 
+
+
+
   getNextPickups: function (payload) {
     var nextPickups = [];
 
@@ -174,32 +167,37 @@ module.exports = NodeHelper.create({
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.ServiceName = ${element.ServiceName}`);
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.nextDateText = ${element.nextDateText}`);
 
-      if (element.ServiceName == payload.refuseServiceName) {
-        var refusePickup = {
-          pickupDate: moment(element.nextDateText),
-          pickupType: "RefuseBin",
-        };
-        nextPickups.push(refusePickup);
+      try {
+        if (element.ServiceName == payload.refuseServiceName) {
+          var refusePickup = {
+            pickupDate: moment(convertStringToDate(element.nextDateText)),
+            pickupType: "RefuseBin",
+          };
+          nextPickups.push(refusePickup);
+        }
+        else if (element.ServiceName == payload.recyclingServiceName) {
+          var greenPickup = {
+            pickupDate: moment(convertStringToDate(element.nextDateText)),
+            pickupType: "GreenBin",
+          };
+          nextPickups.push(greenPickup);
+        }
+        else if (element.ServiceName == payload.foodWasteServiceName) {
+          var foodwastePickup = {
+            pickupDate: moment(convertStringToDate(element.nextDateText)),
+            pickupType: "FoodBin",
+          };
+          nextPickups.push(foodwastePickup);
+        }
+      } catch (error) {
+        Log.error('Error:', error.message);
       }
-      else if (element.ServiceName == payload.recyclingServiceName) {
-        var greenPickup = {
-          pickupDate: moment(element.nextDateText),
-          pickupType: "GreenBin",
-        };
-        nextPickups.push(greenPickup);
-      }
-      else if (element.ServiceName == payload.foodWasteServiceName) {
-        var foodwastePickup = {
-          pickupDate: moment(element.nextDateText),
-          pickupType: "FoodBin",
-        };        
-        nextPickups.push(foodwastePickup);
-      }
+
     }
     //Log.info("nextPickups length (pre sort): "+ nextPickups.length);
     multisort(nextPickups, ["pickupDate"]);
     //Log.info("nextPickups length: "+ nextPickups.length);
-    
+
     this.sendSocketNotification("MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId, nextPickups);
   },
 });
