@@ -73,15 +73,16 @@ module.exports = NodeHelper.create({
         
               for(var reskey in response.data.result)
               {
-                
-                Log.info(`result key: ${reskey}`);
+
                 if (reskey == payload.refuseServiceName ||
                     reskey ==  payload.recyclingServiceName ||
                     reskey ==  payload.foodWasteServiceName) 
                 {
-                  self.schedule.push({ServiceName: reskey,nextDateText: __ret.result[reskey]})
+                  Log.info(`result key: ${reskey}`);
+                  Log.info(`result value: ${response.data.result[reskey]}`);
+
+                  self.schedule.push({ServiceName: reskey, nextDateText: response.data.result[reskey]});
                 }
-                Log.info(`result value: ${__ret.result[reskey]}`);
               }
 
               self.getNextPickups(payload);
