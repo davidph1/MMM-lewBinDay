@@ -45,6 +45,37 @@ module.exports = NodeHelper.create({
     }
   },
 
+  convertStringToDate: function (dateString) {
+    // Define the month names and their respective indexes
+    const monthNames = {
+      January: 0,
+      February: 1,
+      March: 2,
+      April: 3,
+      May: 4,
+      June: 5,
+      July: 6,
+      August: 7,
+      September: 8,
+      October: 9,
+      November: 10,
+      December: 11
+    };
+  
+    // Split the input string by space
+    const parts = dateString.split(' ');
+  
+    // Extract the day, month, and year values
+    const day = parseInt(parts[1]);
+    const month = monthNames[parts[2]];
+    const year = new Date().getFullYear(); // Assumes current year
+  
+    // Create a new Date object using the extracted values
+    const dateObject = new Date(year, month, day);
+  
+    return dateObject;
+  },
+
   socketNotificationReceived: function (notification, payload) {
     var self = this;
     if (notification == "MMM-WESTBERKSBINDAY-CONFIG") {
@@ -82,8 +113,10 @@ module.exports = NodeHelper.create({
                 {
                   //Log.info(`result key: ${reskey}`);
                   //Log.info(`result value: ${response.data.result[reskey]}`);
+                  var __toUTC = convertStringToDate(response.data.result[reskey]);
 
-                  self.schedule.push({ServiceName: reskey, nextDateText: response.data.result[reskey]});
+
+                  self.schedule.push({ServiceName: reskey, nextDateText: __toUTC});
                 }
               }
               self.getNextPickups(payload);
@@ -117,21 +150,21 @@ module.exports = NodeHelper.create({
 
       if (element.ServiceName == payload.refuseServiceName) {
         var refusePickup = {
-          pickupDate: (element.nextDateText),
+          pickupDate: moment(element.nextDateText),
           pickupType: "RefuseBin",
         };
         nextPickups.push(refusePickup);
       }
       else if (element.ServiceName == payload.recyclingServiceName) {
         var greenPickup = {
-          pickupDate: (element.nextDateText),
+          pickupDate: moment(element.nextDateText),
           pickupType: "GreenBin",
         };
         nextPickups.push(greenPickup);
       }
       else if (element.ServiceName == payload.foodWasteServiceName) {
         var foodwastePickup = {
-          pickupDate: (element.nextDateText),
+          pickupDate: moment(element.nextDateText),
           pickupType: "FoodBin",
         };        
         nextPickups.push(foodwastePickup);
