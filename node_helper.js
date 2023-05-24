@@ -98,8 +98,11 @@ module.exports = NodeHelper.create({
   getNextPickups: function (payload) {
     var nextPickups = [];
 
+    Log.info("MMM-WestBerksBinDays: getNextPickups Schedule Length=" + this.schedule.length);
     for (let i = 0; i < this.schedule.length; i++) {
       element=this.schedule[i];
+      Log.info("MMM-WestBerksBinDays: getNextPickups element.ServiceName = " + element.ServiceName);
+      Log.info("MMM-WestBerksBinDays: getNextPickups element.nextDateText = " + element.nextDateText);
 
       if (element.ServiceName == this.config.refuseServiceName) {
         var refusePickup = {
