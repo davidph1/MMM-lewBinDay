@@ -46,35 +46,55 @@ module.exports = NodeHelper.create({
   },
 
   convertStringToDate: function (dateString) {
-    // Define the month names and their respective indexes
-    const monthNames = {
-      January: 0,
-      February: 1,
-      March: 2,
-      April: 3,
-      May: 4,
-      June: 5,
-      July: 6,
-      August: 7,
-      September: 8,
-      October: 9,
-      November: 10,
-      December: 11
-    };
-  
-    // Split the input string by space
-    const parts = dateString.split(' ');
-  
-    // Extract the day, month, and year values
-    const day = parseInt(parts[1]);
-    const month = monthNames[parts[2]];
-    const year = new Date().getFullYear(); // Assumes current year
-  
-    // Create a new Date object using the extracted values
-    const dateObject = new Date(year, month, day);
-  
-    return dateObject;
-  },
+  // Define the month names and their respective indexes
+  const monthNames = {
+    January: 0,
+    February: 1,
+    March: 2,
+    April: 3,
+    May: 4,
+    June: 5,
+    July: 6,
+    August: 7,
+    September: 8,
+    October: 9,
+    November: 10,
+    December: 11
+  };
+
+  // Split the input string by space
+  const parts = dateString.split(' ');
+
+  // Ensure the input string has three parts
+  if (parts.length !== 3) {
+    throw new Error('Invalid date string format. Expected format: "Weekday Day Month".');
+  }
+
+  // Extract the day, month, and year values
+  const day = parseInt(parts[1]);
+  const month = monthNames[parts[2]];
+
+  // Ensure day and month are valid numbers
+  if (isNaN(day) || isNaN(month)) {
+    throw new Error('Invalid day or month value.');
+  }
+
+  // Ensure day is within a valid range
+  if (day < 1 || day > 31) {
+    throw new Error('Invalid day value. Day must be between 1 and 31.');
+  }
+
+  // Ensure month is within a valid range
+  if (month < 0 || month > 11) {
+    throw new Error('Invalid month value. Month must be between 0 and 11.');
+  }
+
+  // Create a new Date object using the extracted values
+  const year = new Date().getFullYear(); // Assumes current year
+  const dateObject = new Date(year, month, day);
+
+  return dateObject;
+},
 
   socketNotificationReceived: function (notification, payload) {
     var self = this;
@@ -113,10 +133,16 @@ module.exports = NodeHelper.create({
                 {
                   //Log.info(`result key: ${reskey}`);
                   //Log.info(`result value: ${response.data.result[reskey]}`);
-                  var __toUTC = convertStringToDate(response.data.result[reskey]);
 
+                  try {
+                    const dateString = (response.data.result[reskey]);
+                    const dateObject = convertStringToDate(dateString);
+                    Log.info(dateObject);
+                  } catch (error) {
+                    Log.error('Error:', error.message);
+                  }
 
-                  self.schedule.push({ServiceName: reskey, nextDateText: __toUTC});
+                  self.schedule.push({ServiceName: reskey, nextDateText: dateObject});
                 }
               }
               self.getNextPickups(payload);
