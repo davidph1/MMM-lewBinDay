@@ -123,16 +123,16 @@ module.exports = NodeHelper.create({
             .then(function (response) {
 
               if (response.data) {
-                //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-                //Log.info(JSON.stringify(response.data));
+                Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
+                Log.info(JSON.stringify(response.data));
 
                 for (var reskey in response.data.result) {
 
                   if (reskey == payload.refuseServiceName ||
                     reskey == payload.recyclingServiceName ||
                     reskey == payload.foodWasteServiceName) {
-                    //Log.info(`result key: ${reskey}`);
-                    //Log.info(`result value: ${response.data.result[reskey]}`);
+                    Log.info(`result key: ${reskey}`);
+                    Log.info(`result value: ${response.data.result[reskey]}`);
 
                     self.schedule.push({ ServiceName: reskey, nextDateText: response.data.result[reskey] });
                   }
