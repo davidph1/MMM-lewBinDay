@@ -172,21 +172,21 @@ module.exports = NodeHelper.create({
       try {
         if (element.ServiceName == payload.refuseServiceName) {
           var refusePickup = {
-            pickupDate: moment(convertStringToDate(element.nextDateText)),
+            pickupDate: convertStringToDate(element.nextDateText),
             pickupType: "RefuseBin",
           };
           nextPickups.push(refusePickup);
         }
         else if (element.ServiceName == payload.recyclingServiceName) {
           var greenPickup = {
-            pickupDate: moment(convertStringToDate(element.nextDateText)),
+            pickupDate: convertStringToDate(element.nextDateText),
             pickupType: "GreenBin",
           };
           nextPickups.push(greenPickup);
         }
         else if (element.ServiceName == payload.foodWasteServiceName) {
           var foodwastePickup = {
-            pickupDate: moment(convertStringToDate(element.nextDateText)),
+            pickupDate: convertStringToDate(element.nextDateText),
             pickupType: "FoodBin",
           };
           nextPickups.push(foodwastePickup);
