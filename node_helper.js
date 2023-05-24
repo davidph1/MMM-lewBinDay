@@ -55,21 +55,21 @@ module.exports = NodeHelper.create({
         var i = 0;
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
-        Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
+        //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
 
         for(var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
 
-          Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
+          //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
-          Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
+          //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
           .then(function(response) {
 
             if (response.data) {
-              Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-              Log.info(JSON.stringify(response.data));
+              //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
+              //Log.info(JSON.stringify(response.data));
         
               for(var reskey in response.data.result)
               {
@@ -78,8 +78,8 @@ module.exports = NodeHelper.create({
                     reskey ==  payload.recyclingServiceName ||
                     reskey ==  payload.foodWasteServiceName) 
                 {
-                  Log.info(`result key: ${reskey}`);
-                  Log.info(`result value: ${response.data.result[reskey]}`);
+                  //Log.info(`result key: ${reskey}`);
+                  //Log.info(`result value: ${response.data.result[reskey]}`);
 
                   self.schedule.push({ServiceName: reskey, nextDateText: response.data.result[reskey]});
                 }
