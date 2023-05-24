@@ -16,7 +16,7 @@ Module.register('MMM-WestBerksBinDay', {
 
   // Define required scripts.
   getScripts: function () {
-    return []; //["moment.js"];
+    return ["moment.js"];
   },
 
   capFirst: function (string) {
