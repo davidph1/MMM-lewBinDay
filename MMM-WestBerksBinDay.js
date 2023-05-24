@@ -63,6 +63,9 @@ Module.register('MMM-WestBerksBinDay', {
   svgIconFactory: function (color) {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttributeNS(null, "class", "binday-icon");
+    var use = document.createElementNS('http://www.w3.org/2000/svg', "use");
+    use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
+
     //Switch for Legacy files
     switch (color) {
       case 'GreenBin':
@@ -75,6 +78,7 @@ Module.register('MMM-WestBerksBinDay', {
           svg.setAttributeNS(null, "style", "fill: #0059ff");
         break;      
       case 'FoodBin':
+        use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#foodBin"));
         svg.setAttributeNS(null, "style", "fill: #38761d");
         svg.setAttributeNS(null, "viewBox", "0 0 12 12");
         break;
@@ -82,8 +86,6 @@ Module.register('MMM-WestBerksBinDay', {
         svg.setAttributeNS(null, "style", "fill: " + color);
         break;
     }
-    var use = document.createElementNS('http://www.w3.org/2000/svg', "use");
-    use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
     svg.appendChild(use);
     return (svg);
   },
