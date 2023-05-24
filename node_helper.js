@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
       if (this.schedule == null) {
         // generate a random Id, required for the request post data♦
         
-        self.schedule = [];
+        schedule = [];
         var i = 0;
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
@@ -57,6 +57,7 @@ module.exports = NodeHelper.create({
 
         for (var __key in json_payload_methods){
           var __value = json_payload_methods[__key];
+          var __keyName = __key;
 
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
@@ -71,8 +72,8 @@ module.exports = NodeHelper.create({
                 Log.info(JSON.stringify(response.data));
                 var __ret = response.data;
 
-                Log.info("__key="+__key);
-                self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
+                Log.info("__key="+__keyName);
+                schedule.push({ServiceName: __keyName, nextDateText: __ret.result[__keyName]});
               }
             }
             catch(err)
@@ -100,8 +101,8 @@ module.exports = NodeHelper.create({
     var nextPickups = [];
 
     Log.info("MMM-WestBerksBinDays: getNextPickups Schedule Length=" + this.schedule.length);
-    for (let i = 0; i < this.schedule.length; i++) {
-      element=this.schedule[i];
+    for (let i = 0; i < schedule.length; i++) {
+      element=schedule[i];
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.ServiceName = ${element.ServiceName}`);
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.nextDateText = ${element.nextDateText}`);
 
