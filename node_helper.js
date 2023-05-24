@@ -57,9 +57,8 @@ module.exports = NodeHelper.create({
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
 
-        for (var __key in json_payload_methods) {
+        for(var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
-          self.__keyName = __key;
 
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
@@ -67,12 +66,22 @@ module.exports = NodeHelper.create({
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
           .then(function(response) {
+
             if (response.data) {
               Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
               Log.info(JSON.stringify(response.data));
+              
               var __ret = response.data;
               
-              self.schedule.push({ ServiceName: self.__keyName, nextDateText: __ret.result[self.__keyName] });
+              for(var reskey in __ret.result)
+              {
+                if (reskey == this.config.refuseServiceName ||
+                    reskey ==  this.config.recyclingServiceName ||
+                    reskey ==  this.config.foodWasteServiceName) 
+                {
+                  self.schedule.push({ ServiceName: reskey, nextDateText: __ret.result[reskey] });
+                }
+              }
             }
 
             if (response.description) { Log.info(response.description); }
