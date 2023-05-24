@@ -94,7 +94,7 @@ module.exports = NodeHelper.create({
   const dateObject = new Date(year, month, day);
 
   return dateObject;
-},
+  },
 
   socketNotificationReceived: function (notification, payload) {
     var self = this;
@@ -136,7 +136,7 @@ module.exports = NodeHelper.create({
 
                   try {
                     const dateString = (response.data.result[reskey]);
-                    const dateObject = convertStringToDate(dateString);
+                    const dateObject = this.convertStringToDate(dateString);
                     Log.info(dateObject);
                   } catch (error) {
                     Log.error('Error:', error.message);
