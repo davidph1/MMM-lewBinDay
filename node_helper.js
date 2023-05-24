@@ -70,7 +70,7 @@ module.exports = NodeHelper.create({
                 try{                
                   if (response.data) {
                     Log.info(JSON.stringify(response.data));
-                    var __ret = JSON.parse(response.data);
+                    var __ret = response.data;
                     self.schedule.push({ServiceName: __key, nextDateText: __ret.result[__key]});
                   }
                 }
