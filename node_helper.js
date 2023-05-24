@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
       if (this.schedule == null) {
         // generate a random Id, required for the request post data♦
 
-        schedule = [];
+        this.schedule = [];
         var i = 0;
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
         Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
@@ -71,7 +71,7 @@ module.exports = NodeHelper.create({
               var __ret = response.data;
 
               Log.info("__key=" + __keyName);
-              schedule.push({ ServiceName: __keyName, nextDateText: __ret.result[__keyName] });
+              this.schedule.push({ ServiceName: __keyName, nextDateText: __ret.result[__keyName] });
             }
 
             if (response.description) { Log.info(response.description); }
@@ -96,8 +96,8 @@ module.exports = NodeHelper.create({
     var nextPickups = [];
 
     Log.info("MMM-WestBerksBinDays: getNextPickups Schedule Length=" + this.schedule.length);
-    for (let i = 0; i < schedule.length; i++) {
-      element = schedule[i];
+    for (let i = 0; i < this.schedule.length; i++) {
+      element = this.schedule[i];
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.ServiceName = ${element.ServiceName}`);
       Log.info(`MMM-WestBerksBinDays: getNextPickups element.nextDateText = ${element.nextDateText}`);
 
