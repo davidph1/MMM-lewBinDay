@@ -75,7 +75,9 @@ Module.register('MMM-WestBerksBinDay', {
           svg.setAttributeNS(null, "style", "fill: #0059ff");
         break;      
       case 'FoodBin':
-          svg.setAttributeNS(null, "style", "fill: #38761d");
+        svg.setAttributeNS(null, "style", "fill: #38761d");
+        svg.setAttributeNS(null, "style", "width: 50%");
+        svg.setAttributeNS(null, "style", "height: 50%");
         break;
       default:
         svg.setAttributeNS(null, "style", "fill: " + color);
