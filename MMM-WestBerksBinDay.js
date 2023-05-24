@@ -67,19 +67,19 @@ Module.register('MMM-WestBerksBinDay', {
 
     //Switch for Legacy files
     switch (color) {
-      case 'GreenBin':
+      case 'Green Bin':
         use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
         svg.setAttributeNS(null, "style", "fill: #00A651");
         break;
-      case 'RefuseBin':
+      case 'Refuse Bin':
         use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
         svg.setAttributeNS(null, "style", "fill: #787878");
         break;
-      case 'PaperBin':
+      case 'Paper Bin':
         use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_iconSmall.svg#foodBin"));
         svg.setAttributeNS(null, "style", "fill: #eeeeee");
         break;      
-      case 'FoodBin':
+      case 'Food Bin':
         use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_iconSmall.svg#foodBin"));
         svg.setAttributeNS(null, "style", "fill: #38761d");
         break;
@@ -114,6 +114,9 @@ Module.register('MMM-WestBerksBinDay', {
       moment.locale();
       var today = moment().startOf("day");
       var pickUpDate = moment(pickup.pickupDate);
+
+      dateContainer.innerHTML = pickup.pickupType+": ";
+
       if (today.isSame(pickUpDate)) {
         dateContainer.innerHTML = "Today";
       } else if (moment(today).add(1, "days").isSame(pickUpDate)) {
