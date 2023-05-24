@@ -85,7 +85,6 @@ module.exports = NodeHelper.create({
                 }
               }
 
-              self.getNextPickups(payload);
             }
 
             if (response.description) { Log.info(response.description); }
@@ -96,6 +95,7 @@ module.exports = NodeHelper.create({
 
           i++;
         }
+        self.getNextPickups(payload);
 
 
       } else {
