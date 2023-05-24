@@ -1,6 +1,8 @@
 var NodeHelper = require("node_helper");
 var axios = require("axios");
+var moment = require("moment");
 const multisort = require("multisort");
+
 const Log = require("logger");
 
 // URL for the POST request
@@ -115,29 +117,30 @@ module.exports = NodeHelper.create({
 
       if (element.ServiceName == payload.refuseServiceName) {
         var refusePickup = {
-          pickupDate: element.nextDateText,
+          pickupDate: moment(element.nextDateText),
           pickupType: "RefuseBin",
         };
         nextPickups.push(refusePickup);
       }
       else if (element.ServiceName == payload.recyclingServiceName) {
         var greenPickup = {
-          pickupDate: element.nextDateText,
+          pickupDate: moment(element.nextDateText),
           pickupType: "GreenBin",
         };
         nextPickups.push(greenPickup);
       }
       else if (element.ServiceName == payload.foodWasteServiceName) {
         var foodwastePickup = {
-          pickupDate: element.nextDateText,
+          pickupDate: moment(element.nextDateText),
           pickupType: "FoodBin",
         };
+        
         nextPickups.push(foodwastePickup);
       }
     }
-    Log.info("nextPickups length (pre sort): "+ nextPickups.length);
+    //Log.info("nextPickups length (pre sort): "+ nextPickups.length);
     multisort(nextPickups, ["pickupDate"]);
-    Log.info("nextPickups length: "+ nextPickups.length);
+    //Log.info("nextPickups length: "+ nextPickups.length);
     
     this.sendSocketNotification("MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId, nextPickups);
   },
