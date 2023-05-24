@@ -10,13 +10,16 @@
 
 .MMM-WestBerksBinDay .binday-container .binday-date {
   color: #FFF;
+  white-space: nowrap;
+  position: absolute;
+  left: 100px;
 }
 
 .MMM-WestBerksBinDay .binday-container .binday-icon-container {
   white-space: nowrap;
   position: absolute;
   right: 0px;
-  top: 6px;
+  top: 4px;
   line-height: 24px;
 }
 

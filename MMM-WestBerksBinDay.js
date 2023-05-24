@@ -121,13 +121,13 @@ Module.register('MMM-WestBerksBinDay', {
       var pickUpDate = moment(pickup.pickupDate);
 
       if (today.isSame(pickUpDate)) {
-        dateContainer.innerHTML += "Today";
+        dateContainer.innerHTML = "Today";
       } else if (moment(today).add(1, "days").isSame(pickUpDate)) {
-        dateContainer.innerHTML += "Tomorrow";
+        dateContainer.innerHTML = "Tomorrow";
       } else if (moment(today).add(7, "days").isAfter(pickUpDate)) {
-        dateContainer.innerHTML += this.capFirst(pickUpDate.format("dddd"));
+        dateContainer.innerHTML = this.capFirst(pickUpDate.format("dddd"));
       } else {
-        dateContainer.innerHTML += this.capFirst(pickUpDate.format(this.config.dateFormat));
+        dateContainer.innerHTML = this.capFirst(pickUpDate.format(this.config.dateFormat));
       }
 
       pickupContainer.appendChild(dateContainer);
