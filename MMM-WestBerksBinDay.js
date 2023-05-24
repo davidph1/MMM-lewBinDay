@@ -53,7 +53,7 @@ Module.register('MMM-WestBerksBinDay', {
   socketNotificationReceived: function (notification, payload) {
     if (notification == "MMM-WESTBERKSBINDAY-RESPONSE" + this.identifier && payload.length > 0) {
       this.nextPickups = payload;
-      Log.info(`MMM-WestBerksBinDays: socketNotificationReceived nextPickupLength=${this.nextPickups.length}`);
+      Log.info(`MMM-WestBerksBinDays: socketNotificationReceived called nextPickupLength=${this.nextPickups.length}`);
 
       this.updateDom(1000);
     }
@@ -89,6 +89,7 @@ Module.register('MMM-WestBerksBinDay', {
 
   getDom: function () {
     var wrapper = document.createElement("div");
+    Log.info(`MMM-WestBerksBinDays: getDom called`);
 
     if (this.nextPickups.length == 0) {
       wrapper.innerHTML = this.translate("LOADING");
