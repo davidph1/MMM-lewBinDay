@@ -22,6 +22,8 @@ var json_payload_methods = {
   nextFoodWasteDateText: "goss.echo.westberks.forms.getNextFoodWasteCollectionDate"
 };
 
+var __keyName = "";
+
 module.exports = NodeHelper.create({
   start: function () {
     console.log("Starting node_helper for module: " + this.name);
@@ -57,7 +59,7 @@ module.exports = NodeHelper.create({
 
         for (var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
-          var __keyName = __key;
+          __keyName = __key;
 
           Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
@@ -70,7 +72,7 @@ module.exports = NodeHelper.create({
               Log.info(JSON.stringify(response.data));
               var __ret = response.data;
               
-              self.schedule.push({ ServiceName: parent.__keyName, nextDateText: __ret.result[parent.__keyName] });
+              self.schedule.push({ ServiceName: self.__keyName, nextDateText: __ret.result[self.__keyName] });
             }
 
             if (response.description) { Log.info(response.description); }
