@@ -75,12 +75,14 @@ module.exports = NodeHelper.create({
               
               for(var reskey in __ret.result)
               {
+                Log.info(`result key: ${reskey}`);
                 if (reskey == this.config.refuseServiceName ||
                     reskey ==  this.config.recyclingServiceName ||
                     reskey ==  this.config.foodWasteServiceName) 
                 {
                   self.schedule.push({ ServiceName: reskey, nextDateText: __ret.result[reskey] });
                 }
+                Log.info(`result value: ${__ret.result[reskey]}`);
               }
             }
 
