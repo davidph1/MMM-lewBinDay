@@ -82,7 +82,6 @@ Module.register('MMM-WestBerksBinDay', {
       case 'FoodBin':
         use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_iconSmall.svg#foodBin"));
         svg.setAttributeNS(null, "style", "fill: #38761d");
-        svg.setAttributeNS(null, "viewBox", "0 0 12 12");
         break;
       default:
         svg.setAttributeNS(null, "style", "fill: " + color);
