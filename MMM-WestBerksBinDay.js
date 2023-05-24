@@ -64,18 +64,20 @@ Module.register('MMM-WestBerksBinDay', {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttributeNS(null, "class", "binday-icon");
     var use = document.createElementNS('http://www.w3.org/2000/svg', "use");
-    use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
 
     //Switch for Legacy files
     switch (color) {
       case 'GreenBin':
+        use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
         svg.setAttributeNS(null, "style", "fill: #00A651");
         break;
       case 'RefuseBin':
+        use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#bin"));
         svg.setAttributeNS(null, "style", "fill: #787878");
         break;
       case 'PaperBin':
-          svg.setAttributeNS(null, "style", "fill: #0059ff");
+        use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#foodBin"));
+        svg.setAttributeNS(null, "style", "fill: #eeeeee");
         break;      
       case 'FoodBin':
         use.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.file("binday_icons.svg#foodBin"));
