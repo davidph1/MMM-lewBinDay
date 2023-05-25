@@ -3,10 +3,7 @@ Magic Mirror Module to display bin collection details from West Berkshire Counci
 
 
 **** FORK FROM THE ORIGINAL https://github.com/hdurdle/MMM-WestBerksBinDay<br>
-**** & WITH THANKS TO Howard Durdle - https://github.com/hdurdle<br>
-**** Updated for points to the new West Berkshire URI; and using a Post (traced with Chrome and Pstman)<br>
-**** Also adds the new Food Waste (mini Green bin) ;)<br>
-
+**** Updated for points to the new West Berkshire URI; using 3 axios http POST.<br>I reverese engineered this by tracing the West Berkshire website using Chrome, and confirming JSON/POST requests with Postman<br>
 
 ![Screenshot](screenshot.png "Screenshot")
 
@@ -62,8 +59,9 @@ The module only has two possible configuration options:
 
 ## Notes
 
-The module is currently hard-coded to pull only the Grey and Green (recycling) bin details from the API. The API does contain other details - bulky waste, container maintenance etc - but those are not as useful on a week to week basis.
+The module is currently hard-coded to pull only the Grey Waste, Food Bin and Green (recycling) bin details from the API. <br>
 
 ## Thanks
 
-Hat tip to [Harm Tilburgs](https://github.com/htilburgs) and his [MMM-MyGarbage](https://github.com/htilburgs/MMM-MyGarbage) module, which inspired this code, and provided the nice SVG icons.
+With thanks to Howard Durdle for his work - https://github.com/hdurdle and all the original people that worked on this:<br>
+<i>"Hat tip to [Harm Tilburgs](https://github.com/htilburgs) and his [MMM-MyGarbage](https://github.com/htilburgs/MMM-MyGarbage) module, which inspired this code, and provided the nice SVG icons." ~ Howard Durdle</i>
