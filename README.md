@@ -12,7 +12,7 @@ Magic Mirror Module to display bin collection details from West Berkshire Counci
 Clone this repository in your modules folder, and install dependencies:
 
     cd ~/MagicMirror/modules 
-    git clone https://github.com/hdurdle/MMM-WestBerksBinDay.git
+    git clone https://github.com/merlinmb/MMM-WestBerksBinDay
     cd MMM-WestBerksBinDay
     npm install 
 
