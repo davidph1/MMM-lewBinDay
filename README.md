@@ -2,8 +2,8 @@
 Magic Mirror Module to display bin collection details from West Berkshire Council's (very closed) API
 
 
-**** FORK FROM THE ORIGINAL https://github.com/hdurdle/MMM-WestBerksBinDay<br>
-**** Updated for points to the new West Berkshire URI; using 3 axios http POST.<br>I reverese engineered this by tracing the West Berkshire website using Chrome, and confirming JSON/POST requests with Postman<br>
+**** FORK to see if can get it to show lewisham bin days****
+**** in development *****
 
 ![Screenshot](screenshot.png "Screenshot")
 
