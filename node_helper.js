@@ -77,20 +77,6 @@ module.exports = NodeHelper.create({
     this.schedule = null;
   },
 
-  getPickupMethodJSON: function (_method, _uprn) {
-    //var __requestId = Math.random() * (9999999999 - 1000000000) + 1000000000;
-    return {
-      jsonrpc: "2.0",
-      id: "1",
-      //        id: __requestId,
-      method: _method,
-      params: {
-        uprn: _uprn,
-      }
-    }
-  },
-
-  
   socketNotificationReceived: function (notification, payload) {
     var self = this;
     if (notification == "MMM-WESTBERKSBINDAY-CONFIG") {
@@ -101,19 +87,13 @@ module.exports = NodeHelper.create({
 
         self.schedule = [];
         var i = 0;
-        Log.info(" URL:       " + URL);
-        Log.info(" UPRN:      " + payload.uprn);
-
-        for (var __key in json_payload_methods) {
-          var __value = json_payload_methods[__key];
-          var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
-
-          axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
-            .then(function (response) {
-
-              if (response.data) {
+        Log.info(" URL: " + URL);
+        Log.info(" UPRN: " + payload.uprn);
+        axios.post("https://lewisham.gov.uk/api/roundsinformation?item=23423835-d2a6-41b1-9637-29e5e8cc2df7&uprn=" + payload.uprn, { headers: HEADERS })
+         .then(function (response) {
+            if (response.data) {
                 Log.info("MMM-WestBerksBinDays: socketNotificationReceived Response: ");
-                Log.info(JSON.stringify(response.data));
+                Log.info(JSON.stringify(response)); //response.data
 
                 for (var reskey in response.data.result) {
 
@@ -135,11 +115,6 @@ module.exports = NodeHelper.create({
             }).catch(function (error) {
               Log.error("MMM-WestBerksBinDays: socketNotificationReceived ");
             });
-
-          i++;
-        }
-
-
       } else {
         this.getNextPickups(payload);
       }
