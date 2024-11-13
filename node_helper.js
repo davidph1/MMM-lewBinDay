@@ -6,7 +6,7 @@ const multisort = require("multisort");
 const Log = require("logger");
 
 // URL for the POST request
-var URL = "https://www.westberks.gov.uk/apiserver/ajaxlibrary";
+var URL = "https://lewisham.gov.uk/api/roundsinformation?item=23423835-d2a6-41b1-9637-29e5e8cc2df7&uprn=";
 
 // Set the request headers
 var HEADERS = {
@@ -15,13 +15,6 @@ var HEADERS = {
   'Accept': '*/*',
   'Accept-Encoding': 'gzip, deflate, br',
   'Connection': 'keep-alive'
-};
-
-// Define the JSON payloads
-var json_payload_methods = {
-  nextRubbishDateText: "goss.echo.westberks.forms.getNextRubbishCollectionDate",
-  nextRecyclingDateText: "goss.echo.westberks.forms.getNextRecyclingCollectionDate",
-  nextFoodWasteDateText: "goss.echo.westberks.forms.getNextFoodWasteCollectionDate"
 };
 
 var __keyName = "";
@@ -108,16 +101,12 @@ module.exports = NodeHelper.create({
 
         self.schedule = [];
         var i = 0;
-        Log.info("MMM-WestBerksBinDays: socketNotificationReceived URL:       " + URL);
-        Log.info("MMM-WestBerksBinDays: socketNotificationReceived UPRN:      " + payload.uprn);
-        //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Headers JSON: " + JSON.stringify(HEADERS));
+        Log.info(" URL:       " + URL);
+        Log.info(" UPRN:      " + payload.uprn);
 
         for (var __key in json_payload_methods) {
           var __value = json_payload_methods[__key];
-
-          //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Fetching:  " + __key + " using " + __value);
           var __pickupjson = self.getPickupMethodJSON(__value, payload.uprn)
-          //Log.info("MMM-WestBerksBinDays: socketNotificationReceived Post JSON: " + JSON.stringify(__pickupjson));
 
           axios.post("https://www.westberks.gov.uk/apiserver/ajaxlibrary", __pickupjson, { headers: HEADERS })
             .then(function (response) {
@@ -157,9 +146,6 @@ module.exports = NodeHelper.create({
     }
   },
 
-
-
-
   getNextPickups: function (payload) {
     var nextPickups = [];
 
@@ -196,10 +182,7 @@ module.exports = NodeHelper.create({
       }
 
     }
-    //Log.info("nextPickups length (pre sort): "+ nextPickups.length);
     multisort(nextPickups, ["pickupDate"]);
-    //Log.info("nextPickups length: "+ nextPickups.length);
-
     this.sendSocketNotification("MMM-WESTBERKSBINDAY-RESPONSE" + payload.instanceId, nextPickups);
   },
 });
